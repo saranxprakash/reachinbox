@@ -21,7 +21,11 @@ export const getQueueStats = async (req: Request, res: Response) => {
         body: job.data?.body || "",
         // Calculate the future time it will send
         time: job.data?.scheduleTime
-          ? new Date(job.data.scheduleTime).toLocaleString()
+          ? new Date(job.data.scheduleTime).toLocaleString("en-IN", {
+              timeZone: "Asia/Kolkata",
+              dateStyle: "short",
+              timeStyle: "medium",
+            })
           : "Immediately",
       })),
       sentList: completedJobs.map((job) => ({
