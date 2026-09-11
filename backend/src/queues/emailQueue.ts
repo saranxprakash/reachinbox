@@ -94,16 +94,23 @@ export const emailWorker = new Worker<EmailJob>(
       );
 
       // 3. Index in Elasticsearch
-      await esClient.index({
-        index: "emails",
-        document: {
-          userId,
-          leadEmail,
-          subject,
-          status: "sent",
-          sentAt: new Date(),
-        },
-      });
+      try {
+        await esClient.index({
+          index: "emails",
+          document: {
+            userId,
+            leadEmail,
+            subject,
+            status: "sent",
+            sentAt: new Date(),
+          },
+        });
+      } catch (esError) {
+        console.error(
+          "⚠️ Elasticsearch logging failed, but email was sent:",
+          esError,
+        );
+      }
     } catch (error) {
       console.error(`Failed to send to ${leadEmail}`, error);
       throw error; // Let BullMQ handle retries natively
