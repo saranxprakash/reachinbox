@@ -17,7 +17,7 @@ import {
 } from "lucide-react";
 
 import axios from "axios";
-
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
 interface User {
   id: number;
   name: string;
@@ -79,7 +79,7 @@ export default function ComposeModal({ onClose }: { onClose: () => void }) {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const response = await axios.get("http://localhost:3000/auth/me", {
+        const response = await axios.get(`${API_URL}/auth/me`, {
           withCredentials: true,
         });
 
@@ -239,7 +239,7 @@ export default function ComposeModal({ onClose }: { onClose: () => void }) {
     try {
       setIsSubmitting(true);
 
-      await axios.post("http://localhost:3000/api/upload", formData, {
+      await axios.post(`${API_URL}/api/upload`, formData, {
         withCredentials: true,
 
         headers: {

@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+const API_URL = import.meta.env.VITE_API_URL;
 import {
   BrowserRouter as Router,
   Routes,
@@ -28,7 +29,7 @@ function ProtectedRoute({ children }: { children: React.ReactElement }) {
   useEffect(() => {
     const checkAuthentication = async () => {
       try {
-        const response = await axios.get("http://localhost:3000/auth/me", {
+        const response = await axios.get(`${API_URL}/auth/me`, {
           withCredentials: true,
         });
 
