@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-const API_URL = import.meta.env.VITE_API_URL;
+const API_URL =
+  import.meta.env.VITE_API_URL || "https://reachinbox-79u6.onrender.com";
 import {
   BrowserRouter as Router,
   Routes,

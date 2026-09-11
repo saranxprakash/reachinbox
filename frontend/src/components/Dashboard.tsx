@@ -15,8 +15,8 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import ComposeModal from "./ComposeModal";
 
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
-
+const API_URL =
+  import.meta.env.VITE_API_URL || "https://reachinbox-79u6.onrender.com";
 interface User {
   id: number;
   name: string;

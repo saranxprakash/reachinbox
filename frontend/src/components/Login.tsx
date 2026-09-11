@@ -1,6 +1,7 @@
 import React from "react";
 
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
+const API_URL =
+  import.meta.env.VITE_API_URL || "https://reachinbox-79u6.onrender.com";
 
 export default function Login() {
   const handleGoogleLogin = () => {
