@@ -20,9 +20,9 @@ export const getQueueStats = async (req: Request, res: Response) => {
         subject: job.data?.subject || "No Subject",
         body: job.data?.body || "",
         // Calculate the future time it will send
-        time: job.opts?.delay
-          ? new Date(job.timestamp + job.opts.delay).toLocaleString()
-          : new Date(job.timestamp).toLocaleString(),
+        time: job.data?.scheduleTime
+          ? new Date(job.data.scheduleTime).toLocaleString()
+          : "Immediately",
       })),
       sentList: completedJobs.map((job) => ({
         id: job.id,
@@ -71,10 +71,16 @@ export const uploadAndSchedule = async (req: Request, res: Response) => {
         for (const email of leads) {
           await emailQueue.add(
             "send-email",
-            { userId, leadEmail: email, subject, body },
+            {
+              userId,
+              leadEmail: email,
+              subject,
+              body,
+              scheduleTime: scheduleTime || null,
+            },
             {
               delay: finalDelay,
-              attempts: 3, // Idempotency/Resilience: retry failed jobs
+              attempts: 3,
               backoff: { type: "exponential", delay: 5000 },
             },
           );

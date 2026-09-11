@@ -44,6 +44,7 @@ interface EmailJob {
   leadEmail: string;
   subject: string;
   body: string;
+  scheduleTime?: string | null;
 }
 
 // Worker to process emails
