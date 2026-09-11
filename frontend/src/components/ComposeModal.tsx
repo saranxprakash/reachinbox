@@ -202,18 +202,29 @@ export default function ComposeModal({ onClose }: { onClose: () => void }) {
       return;
     }
 
+    // Validate recipient email
+    if (toEmail.trim()) {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+      if (!emailRegex.test(toEmail.trim())) {
+        alert("Please enter a valid recipient email.");
+        return;
+      }
+    }
+
     // ---------------------------------------------------
     // Create FormData
     // ---------------------------------------------------
 
     const formData = new FormData();
 
+    // Subject
     formData.append("subject", subject.trim());
 
+    // Body
     formData.append("body", body);
 
-    // IMPORTANT:
-    // Use REAL PostgreSQL user ID from Google login
+    // Real PostgreSQL user ID
     formData.append("userId", String(user.id));
 
     // Single recipient
@@ -221,7 +232,7 @@ export default function ComposeModal({ onClose }: { onClose: () => void }) {
       formData.append("toEmail", toEmail.trim());
     }
 
-    // CSV
+    // CSV recipient list
     if (csvFile) {
       formData.append("file", csvFile);
     }
@@ -233,7 +244,14 @@ export default function ComposeModal({ onClose }: { onClose: () => void }) {
 
     // Schedule time
     if (customDateTime) {
-      formData.append("scheduleTime", new Date(customDateTime).toISOString());
+      const scheduledDate = new Date(customDateTime);
+
+      if (scheduledDate <= new Date()) {
+        alert("Please select a future date and time.");
+        return;
+      }
+
+      formData.append("scheduleTime", scheduledDate.toISOString());
     }
 
     try {
@@ -241,10 +259,6 @@ export default function ComposeModal({ onClose }: { onClose: () => void }) {
 
       await axios.post(`${API_URL}/api/upload`, formData, {
         withCredentials: true,
-
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
       });
 
       alert(
@@ -260,7 +274,7 @@ export default function ComposeModal({ onClose }: { onClose: () => void }) {
       const message =
         error?.response?.data?.message ||
         error?.response?.data?.error ||
-        "Failed to send campaign. Check console for details.";
+        "Failed to send campaign. Please try again.";
 
       alert(message);
     } finally {
@@ -275,9 +289,7 @@ export default function ComposeModal({ onClose }: { onClose: () => void }) {
   return (
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
       <div className="bg-white w-full max-w-5xl rounded-xl shadow-2xl flex flex-col h-[85vh]">
-        {/* =================================================
-            HEADER
-        ================================================== */}
+        {/* HEADER */}
 
         <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
           <div className="flex items-center text-gray-700 font-medium">
@@ -324,9 +336,7 @@ export default function ComposeModal({ onClose }: { onClose: () => void }) {
               <Clock size={18} />
             </button>
 
-            {/* =================================================
-                SCHEDULE DROPDOWN
-            ================================================== */}
+            {/* Schedule dropdown */}
 
             {showScheduleDropdown && (
               <div className="absolute top-10 right-0 mt-2 w-72 bg-white border border-gray-200 rounded-lg shadow-xl z-10 p-4 text-sm text-gray-700 space-y-3">
@@ -377,6 +387,7 @@ export default function ComposeModal({ onClose }: { onClose: () => void }) {
             )}
 
             {/* Send button */}
+
             <button
               type="button"
               onClick={handleSend}
@@ -394,9 +405,7 @@ export default function ComposeModal({ onClose }: { onClose: () => void }) {
           </div>
         </div>
 
-        {/* =================================================
-            FORM
-        ================================================== */}
+        {/* FORM */}
 
         <div className="px-8 py-6 space-y-5 overflow-y-auto flex-1">
           {/* FROM */}
@@ -463,6 +472,7 @@ export default function ComposeModal({ onClose }: { onClose: () => void }) {
             </div>
 
             {/* CSV input */}
+
             <input
               type="file"
               accept=".csv"
@@ -472,6 +482,7 @@ export default function ComposeModal({ onClose }: { onClose: () => void }) {
             />
 
             {/* Upload list */}
+
             <button
               type="button"
               onClick={() => csvInputRef.current?.click()}

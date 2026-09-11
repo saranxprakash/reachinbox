@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+
 import {
   ChevronDown,
   Clock,
@@ -9,9 +10,12 @@ import {
   Star,
   LogOut,
 } from "lucide-react";
+
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import ComposeModal from "./ComposeModal";
+
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
 
 interface User {
   id: number;
@@ -50,13 +54,13 @@ export default function Dashboard() {
     sentList: [],
   });
 
-  // --------------------------------------------------
+  // ==================================================
   // GET LOGGED-IN GOOGLE USER
-  // --------------------------------------------------
+  // ==================================================
 
   const fetchUser = async () => {
     try {
-      const response = await axios.get("http://localhost:3000/auth/me", {
+      const response = await axios.get(`${API_URL}/auth/me`, {
         withCredentials: true,
       });
 
@@ -71,13 +75,13 @@ export default function Dashboard() {
     }
   };
 
-  // --------------------------------------------------
+  // ==================================================
   // GET CAMPAIGN STATS
-  // --------------------------------------------------
+  // ==================================================
 
   const fetchStats = async () => {
     try {
-      const response = await axios.get("http://localhost:3000/api/stats", {
+      const response = await axios.get(`${API_URL}/api/stats`, {
         withCredentials: true,
       });
 
@@ -95,14 +99,14 @@ export default function Dashboard() {
     }
   };
 
-  // --------------------------------------------------
+  // ==================================================
   // LOGOUT
-  // --------------------------------------------------
+  // ==================================================
 
   const handleLogout = async () => {
     try {
       await axios.post(
-        "http://localhost:3000/auth/logout",
+        `${API_URL}/auth/logout`,
         {},
         {
           withCredentials: true,
@@ -116,9 +120,9 @@ export default function Dashboard() {
     }
   };
 
-  // --------------------------------------------------
+  // ==================================================
   // INITIAL LOAD
-  // --------------------------------------------------
+  // ==================================================
 
   useEffect(() => {
     fetchUser();
@@ -140,6 +144,7 @@ export default function Dashboard() {
       <div className="w-64 border-r border-gray-200 flex flex-col bg-white">
         <div className="p-6">
           {/* Logo */}
+
           <div className="mb-8 flex items-center">
             <div className="w-12 h-12 bg-gray-900 text-white flex items-center justify-center rounded-xl text-2xl font-bold shadow-sm">
               S
@@ -147,10 +152,12 @@ export default function Dashboard() {
           </div>
 
           {/* Logged-in User */}
+
           {user && (
             <div className="flex items-center justify-between hover:bg-gray-50 p-2 -mx-2 rounded-lg transition-colors">
               <div className="flex items-center space-x-3 min-w-0">
                 {/* Avatar */}
+
                 {user.avatar ? (
                   <img
                     src={user.avatar}
@@ -164,6 +171,7 @@ export default function Dashboard() {
                 )}
 
                 {/* Name + Email */}
+
                 <div className="min-w-0">
                   <div className="font-semibold text-sm text-gray-900 truncate">
                     {user.name}
@@ -180,6 +188,7 @@ export default function Dashboard() {
           )}
 
           {/* Compose Button */}
+
           <button
             onClick={() => setIsComposeOpen(true)}
             className="w-full mt-6 py-2 border-2 border-[#10B981] text-[#10B981] rounded-full font-medium hover:bg-green-50 transition-colors"
@@ -188,6 +197,7 @@ export default function Dashboard() {
           </button>
 
           {/* Core Navigation */}
+
           <div className="mt-8">
             <div className="text-[11px] text-gray-400 font-bold mb-3 uppercase tracking-wider">
               Core
@@ -195,6 +205,7 @@ export default function Dashboard() {
 
             <nav className="space-y-1">
               {/* Scheduled */}
+
               <div
                 onClick={() => setActiveTab("scheduled")}
                 className={`flex items-center justify-between px-3 py-2.5 rounded-lg cursor-pointer transition-colors ${
@@ -228,6 +239,7 @@ export default function Dashboard() {
               </div>
 
               {/* Sent */}
+
               <div
                 onClick={() => setActiveTab("sent")}
                 className={`flex items-center justify-between px-3 py-2.5 rounded-lg cursor-pointer transition-colors ${
@@ -262,6 +274,7 @@ export default function Dashboard() {
         </div>
 
         {/* Logout at bottom */}
+
         <div className="mt-auto p-6 border-t border-gray-100">
           <button
             onClick={handleLogout}
@@ -284,6 +297,7 @@ export default function Dashboard() {
 
         <div className="h-20 flex items-center px-8 border-b border-gray-100 justify-between">
           {/* Search */}
+
           <div className="relative w-full max-w-2xl">
             <Search
               size={18}
@@ -298,8 +312,10 @@ export default function Dashboard() {
           </div>
 
           {/* Header Right Side */}
+
           <div className="flex items-center gap-5 ml-6">
             {/* Filter */}
+
             <button
               className="text-gray-400 hover:text-gray-600 transition-colors"
               title="Filter"
@@ -308,6 +324,7 @@ export default function Dashboard() {
             </button>
 
             {/* Refresh */}
+
             <button
               onClick={fetchStats}
               className="text-gray-400 hover:text-gray-600 transition-colors"
@@ -317,9 +334,11 @@ export default function Dashboard() {
             </button>
 
             {/* Google User */}
+
             {user && (
               <div className="flex items-center gap-3 pl-5 border-l border-gray-200">
                 {/* Avatar */}
+
                 {user.avatar ? (
                   <img
                     src={user.avatar}
@@ -333,6 +352,7 @@ export default function Dashboard() {
                 )}
 
                 {/* User Details */}
+
                 <div className="hidden md:block max-w-[180px]">
                   <div className="text-sm font-semibold text-gray-900 truncate">
                     {user.name}
@@ -344,6 +364,7 @@ export default function Dashboard() {
                 </div>
 
                 {/* Logout */}
+
                 <button
                   onClick={handleLogout}
                   title="Logout"
