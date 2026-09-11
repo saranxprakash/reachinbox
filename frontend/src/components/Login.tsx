@@ -1,42 +1,49 @@
-import React from "react";
+import React, { useState } from "react";
 
 const API_URL =
   import.meta.env.VITE_API_URL || "https://reachinbox-79u6.onrender.com";
 
 export default function Login() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
   const handleGoogleLogin = () => {
     window.location.href = `${API_URL}/auth/google`;
+  };
+
+  const handleLogin = (e: React.FormEvent) => {
+    e.preventDefault();
+
+    // Email/password authentication will be connected to the backend here.
+    console.log("Login attempt:", email);
   };
 
   return (
     <div className="min-h-screen bg-white flex items-center justify-center px-4">
       <div className="w-full max-w-md">
-        {/* Logo */}
-        <div className="flex justify-center mb-8">
-          <div className="w-14 h-14 bg-gray-900 text-white rounded-xl flex items-center justify-center text-2xl font-bold">
-            S
-          </div>
-        </div>
-
-        {/* Card */}
-        <div className="bg-white border border-gray-200 rounded-2xl shadow-sm p-8">
-          <div className="text-center mb-8">
-            <h1 className="text-2xl font-bold text-gray-900">
-              Welcome to ReachInbox
-            </h1>
-
-            <p className="text-sm text-gray-500 mt-2">
-              Sign in to manage your email campaigns
-            </p>
+        {/* Login Card */}
+        <div className="bg-white border border-gray-200 rounded-xl shadow-sm p-10">
+          {/* Heading */}
+          <div className="text-center mb-7">
+            <h1 className="text-3xl font-bold text-gray-900">Login</h1>
           </div>
 
           {/* Google Login */}
           <button
             type="button"
             onClick={handleGoogleLogin}
-            className="w-full flex items-center justify-center gap-3 border border-gray-300 rounded-lg py-3 px-4 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
+            className="w-full flex items-center justify-center gap-2
+              bg-[#e4f7ed]
+              hover:bg-[#d8f1e5]
+              rounded-lg
+              py-3
+              text-sm
+              font-medium
+              text-gray-700
+              transition-colors"
           >
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+            {/* Google Icon */}
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
               <path
                 d="M21.35 12.23c0-.79-.07-1.55-.2-2.27H12v4.3h5.22a4.46 4.46 0 0 1-1.94 2.93v2.44h3.14c1.84-1.7 2.93-4.2 2.93-7.4Z"
                 fill="#4285F4"
@@ -54,12 +61,70 @@ export default function Login() {
                 fill="#EA4335"
               />
             </svg>
-            Continue with Google
+            Login with Google
           </button>
 
-          <p className="text-xs text-center text-gray-400 mt-6">
-            By continuing, you agree to use ReachInbox responsibly.
-          </p>
+          {/* Divider */}
+          <div className="flex items-center gap-3 my-5">
+            <div className="flex-1 h-px bg-gray-200"></div>
+
+            <span className="text-xs text-gray-400 whitespace-nowrap">
+              or sign up through email
+            </span>
+
+            <div className="flex-1 h-px bg-gray-200"></div>
+          </div>
+
+          {/* Email Login Form */}
+          <form onSubmit={handleLogin} className="space-y-3">
+            {/* Email */}
+            <input
+              type="email"
+              placeholder="Email ID"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              className="w-full bg-gray-100 border-none rounded-lg
+                px-4 py-3
+                text-sm
+                text-gray-700
+                placeholder-gray-500
+                outline-none
+                focus:ring-2 focus:ring-green-200"
+            />
+
+            {/* Password */}
+            <input
+              type="password"
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              className="w-full bg-gray-100 border-none rounded-lg
+                px-4 py-3
+                text-sm
+                text-gray-700
+                placeholder-gray-500
+                outline-none
+                focus:ring-2 focus:ring-green-200"
+            />
+
+            {/* Login Button */}
+            <button
+              type="submit"
+              className="w-full bg-green-600
+                hover:bg-green-700
+                text-white
+                rounded-lg
+                py-3
+                text-sm
+                font-medium
+                transition-colors
+                mt-2"
+            >
+              Login
+            </button>
+          </form>
         </div>
       </div>
     </div>
